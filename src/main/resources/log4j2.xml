@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration monitorInterval="30">
+	<Appenders>
+		<RollingFile name="fileOut" fileName="./logs/stack/stack-api.log"
+			filePattern="./logs/stack/stack-api-%d{MM-dd-yyyy}-%i.log" append="true">
+			<PatternLayout>
+				<pattern>%d{dd.MM.yy HH:mm:ss.SSS} %-4r %-5p [%t]
+					%X{userLogin}:[%c]:%M:%L - %m%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<SizeBasedTriggeringPolicy size="5 MB" />
+			</Policies>
+			<DefaultRolloverStrategy max="10" />
+		</RollingFile>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.stack" level="debug" additivity="true" >
+			<appender-ref ref="fileOut" level="debug" />
+		</Logger>
+		<Root level="error">
+			<AppenderRef ref="fileOut" />
+		</Root>
+	</Loggers>
+</Configuration>

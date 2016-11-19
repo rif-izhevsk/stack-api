@@ -15,12 +15,14 @@ hs_err_pid*
 .gradle/
 !gradle-wrapper.jar
 
-# Build dirs
+# Build/logs dirs
 build/
 bin/
 target/
+logs/
 
 # Eclipse files
 .settings/
 .classpath
 .project
+.metadata/
