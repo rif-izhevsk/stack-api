@@ -1,6 +1,7 @@
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
 apply plugin: 'jetty'
+apply plugin: 'jacoco'
 
 version = '0.1'
 
@@ -14,4 +15,8 @@ dependencies {
   compile 'org.glassfish.jersey.core:jersey-client:2.+'
   compile 'org.apache.logging.log4j:log4j-api:2.7'
   compile 'org.apache.logging.log4j:log4j-core:2.7'
+}
+
+test {
+  finalizedBy jacocoTestReport
 }

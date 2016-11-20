@@ -1,1 +1,1 @@
-gradlew jettyRunWar
+gradlew clean build jettyRunWar

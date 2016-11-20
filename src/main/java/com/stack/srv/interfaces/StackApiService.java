@@ -1,16 +1,13 @@
 package com.stack.srv.interfaces;
 
+import javax.ws.rs.core.Response;
+
 public interface StackApiService {
 	/** 
-	 * Inits client path by properties 
-	 * @return success execution
-	 * /
-	public boolean init();
-
-	/** 
 	 * Test request with constant parameters
-	 * @return json string
+	 * @param intitle substring in title
+	 * @return {@link Response}
 	 */
-	public String testSearch();
+	public Response search(String intitle);
 
 }
