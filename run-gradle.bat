@@ -1,1 +1,1 @@
-gradlew clean build jettyRunWar
+gradlew clean build cargoRedeployRemote

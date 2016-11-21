@@ -14,9 +14,9 @@ import org.apache.logging.log4j.Logger;
 import com.stack.srv.StackApiServiceImpl;
 import com.stack.srv.interfaces.StackApiService;
 
-@Path("/stack")
+@Path("/")
 public class StackApiWebService {
-	private static final Logger log = LogManager.getLogger(HelloWorldResource.class);
+	private static final Logger log = LogManager.getLogger(StackApiWebService.class);
 	private StackApiService stackApiService = new StackApiServiceImpl();
 
 	@GET

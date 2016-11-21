@@ -1,22 +1,69 @@
 apply plugin: 'war'
 apply plugin: 'eclipse-wtp'
-apply plugin: 'jetty'
 apply plugin: 'jacoco'
+apply plugin: 'cargo'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-cargo-plugin:1.5'
+    }
+}
 
 version = '0.1'
 
 repositories {
   mavenCentral()
+  maven {
+    url 'http://repository.primefaces.org'
+  }
+  maven {
+    url 'https://repository.jboss.org/nexus/content/groups/public/'
+  }
+}
+
+eclipse {
+  wtp {
+    facet {
+      facet name: 'jst.java', version: '1.8'
+      facet name: 'jst.web', version: '3.1'
+    }
+  }
 }
 
 dependencies {
   testCompile 'junit:junit:4.+'
+  compile 'org.glassfish.jersey.containers.glassfish:jersey-gf-cdi:2.+'
   compile 'org.glassfish.jersey.containers:jersey-container-servlet:2.+'
   compile 'org.glassfish.jersey.core:jersey-client:2.+'
+  compile 'org.glassfish.jersey.core:jersey-server:2.+'
   compile 'org.apache.logging.log4j:log4j-api:2.7'
   compile 'org.apache.logging.log4j:log4j-core:2.7'
+  compile 'com.google.code.gson:gson:2.8.0'
+  providedCompile 'javax.servlet:servlet-api:2.5'
+  providedCompile 'com.sun.faces:jsf-api:2.2.5'
+  providedCompile 'com.sun.faces:jsf-impl:2.2.5'
+  compile 'org.primefaces:primefaces:4.0'
+  compile 'org.primefaces.themes:bootstrap:1.0.10'
+
+  cargo 'org.wildfly:wildfly-controller-client:8.1.0.Final'
+  cargo 'org.codehaus.cargo:cargo-ant:1.4.8'
 }
 
+cargo {
+    containerId = 'wildfly8x'
+    remote {
+        hostname = 'localhost'
+        username = 'admin'
+        password = 'admin123'
+    }
+
+}
+war {
+    archiveName = 'stack-api.war'
+}
 test {
   finalizedBy jacocoTestReport
 }

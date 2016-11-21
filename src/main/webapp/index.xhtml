@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<h:head>
+<style type="text/css">
+.answered {
+background-color: #98FB98;
+}
+.unanswered {
+background-color: #FFA07A;
+}
+</style>
+
+</h:head>
+<h:body>
+	<h1>StackExchange Q&amp;A</h1>
+	<h:form>
+		<p:panel>
+			<p:messages autoUpdate="true" />
+
+			<p:panel id="toggleable" header="Task" toggleable="true"
+				toggleSpeed="500" widgetVar="panel" style="margin-bottom:20px">
+
+				<p:ajax event="toggle" />
+
+				<h:panelGrid columns="1">
+					<p>Full Stack Live Coding Exercise</p>
+					<p>
+						Scenario<br /> Create a Java web application with a form that
+						allows a user to enter a search string, queries Stack Exchange to
+						find questions with titles containing that string, and display the
+						results.
+					</p>
+
+					<p>
+						Requirements<br /> Display the results in a tabular format
+						showing at least the date of the question, its title and who
+						posted it.<br /> If the question has been answered, use a visual
+						style to differentiate it from unanswered questions.<br /> The
+						displayed item should have a means to navigate to the original
+						question on Stack Exchange.
+					</p>
+
+					<p>
+						Expectations<br /> Treat this project as you would any
+						professional task - feel free to ask questions, clarify
+						requirements, and talk about your design and thinking with the
+						team, but as in the real world, time is limited.<br /> You may
+						use any resource, library, example code or documentation you can
+						find on the web.
+					</p>
+
+					<p>
+						Documentation<br />
+						<h:outputLink
+							value="http://api.stackexchange.com/docs/search#order=desc&amp;sort=activity&amp;intitle=java&amp;filter=default&amp;site=stackoverflow&amp;run=true"
+							target="_blank">Stackoverflow API</h:outputLink>
+					</p>
+				</h:panelGrid>
+
+			</p:panel>
+			<h:panelGrid columns="3" style="margin-bottom:20px">
+				<h:outputText value="In title" />
+				<p:inputText value="#{quesView.intitle}" required="true"
+					requiredMessage="Please enter 'In title'" label="In title" />
+				<p:commandButton actionListener="#{quesView.buttonAction}"
+					update="stackItems" icon="ui-icon-search" />
+			</h:panelGrid>
+			<p:dataTable var="item" value="#{quesView.lastAnswer.items}"
+				rowStyleClass="#{item.isAnswered ? 'answered' : 'unanswered'}"
+				id="stackItems">
+				<p:column headerText="id">
+					<h:outputText value="#{item.questionId}" />
+				</p:column>
+				<p:column headerText="Date">
+					<h:outputText value="#{quesView.formatDate(item.creationDate)}" />
+				</p:column>
+				<p:column headerText="Title">
+					<h:outputLink value="#{item.link}" target="_blank">
+						<h:outputText value="#{item.title}" escape="false" />
+					</h:outputLink>
+				</p:column>
+				<p:column headerText="By">
+					<h:outputText value="#{item.owner.displayName}" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</h:form>
+</h:body>
+</html>
