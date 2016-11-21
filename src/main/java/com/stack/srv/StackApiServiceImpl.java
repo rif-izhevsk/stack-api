@@ -28,10 +28,16 @@ public class StackApiServiceImpl implements StackApiService {
 				.path(StackApiProperties.getInstance().getValue("client.path", CLIENT_PATH));
 	}
 
-	public Response search(String intitle) {
-		log.info("search intitle = '{}'", intitle);
-		Invocation.Builder builder = target.queryParam("intitle", intitle).queryParam("site", "stackoverflow")
-				.request(MediaType.APPLICATION_JSON_TYPE).header(HttpHeaders.ACCEPT_ENCODING, "gzip");
+	@Override
+	public Response search(String intitle, Integer page, Integer pagesize) {
+		log.info("search intitle='{}' & page='{}' & pagesize='{}' ", intitle);
+		WebTarget webTarget = target.queryParam("intitle", intitle).queryParam("site", "stackoverflow");
+		if (page != null && page > 1)
+			webTarget = webTarget.queryParam("page", page);
+		if (pagesize != null && pagesize > 0)
+			webTarget = webTarget.queryParam("pagesize", pagesize);
+		Invocation.Builder builder = webTarget.request(MediaType.APPLICATION_JSON_TYPE)
+				.header(HttpHeaders.ACCEPT_ENCODING, "gzip");
 		return builder.get();
 	}
 

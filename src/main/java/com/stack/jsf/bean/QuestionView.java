@@ -6,8 +6,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.ws.rs.core.Response;
 
@@ -31,7 +33,10 @@ public class QuestionView implements Serializable {
 	private StackApiService stackApi = null;
 	private Gson gson = null;
 	private StackAnswer lastAnswer = null;
+	private String lastError = null;
 	private String intitle = "";
+	private Integer page = null;
+	private Integer pagesize = null;
 
 	public QuestionView() {
 		super();
@@ -43,25 +48,35 @@ public class QuestionView implements Serializable {
 		gson = new GsonBuilder().create();
 	}
 
-	public void callSearch() {
-		Response resp = stackApi.search(intitle);
-		if (resp != null && resp.getStatus() == 200) {
-			// TODO meaningful logs
-			log.info("StackExchange response is handling...");
-			String jsonResp = ResponseParser.parseGzip(resp);
-			StackAnswer answer = gson.fromJson(jsonResp, StackAnswer.class);
-			if (answer != null) {
-				lastAnswer = answer;
-			} else {
-				log.error("Something wrong with answer {}", answer);
-			}
-		} else {
-			log.error("StackExchange response is error: {}", resp.getEntity());
+	private boolean execSearch() {
+		Response resp = stackApi.search(intitle, page, pagesize);
+		if (resp == null) {
+			log.error("StackExchange response is null");
+			lastError = "Server returned empty response";
+			return false;
 		}
+			
+		if (resp.getStatus() != 200) {
+			log.error("StackExchange response is error #{}: {}", resp.getStatus(), resp.getEntity());
+			lastError = "Server returned error " + resp.getStatus();
+			return false;
+		}
+		log.info("StackExchange response is handling...");
+		String jsonResp = ResponseParser.parseGzip(resp);
+		StackAnswer answer = gson.fromJson(jsonResp, StackAnswer.class);
+		if (answer == null) {
+			log.error("Unable parse the answer {}", resp.getEntity());
+			lastError = "Unable parse the answer";
+			return false;
+		}
+		lastAnswer = answer;
+		return true;
 	}
 
 	public void buttonAction(ActionEvent actionEvent) {
-		callSearch();
+		if (!execSearch()) {
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", lastError));
+		}
 	}
 
 	public StackAnswer getLastAnswer() {
@@ -74,6 +89,22 @@ public class QuestionView implements Serializable {
 
 	public void setIntitle(String intitle) {
 		this.intitle = intitle;
+	}
+
+	public Integer getPage() {
+		return page;
+	}
+
+	public void setPage(Integer page) {
+		this.page = page;
+	}
+
+	public Integer getPagesize() {
+		return pagesize;
+	}
+
+	public void setPagesize(Integer pagesize) {
+		this.pagesize = pagesize;
 	}
 
 	public String formatDate(Long longDate) {

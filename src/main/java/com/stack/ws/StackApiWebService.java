@@ -1,6 +1,7 @@
 package com.stack.ws;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -23,8 +24,10 @@ public class StackApiWebService {
 	@Path("/search")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public Response search(@QueryParam("intitle") String intitle) {
+	public Response search(@QueryParam("intitle") String intitle,
+			@QueryParam("page") @DefaultValue("") Integer page,
+			@QueryParam("pagesize") @DefaultValue("") Integer pagesize) {
 		log.debug("Test search");
-		return stackApiService.search(intitle);
+		return stackApiService.search(intitle, page, pagesize);
 	}
 }

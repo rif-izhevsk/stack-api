@@ -16,6 +16,10 @@ public class ResponseParser {
 
 	private static final Logger log = LogManager.getLogger(ResponseParser.class);
 
+	/**
+	 * @param response 
+	 * @return Json string extracted from GZip
+	 */
 	public static String parseGzip(Response response) {
 		String data = new String();
 		try {

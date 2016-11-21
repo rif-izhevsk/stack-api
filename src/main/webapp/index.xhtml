@@ -7,12 +7,13 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 <h:head>
-<style type="text/css">
+	<style type="text/css">
 .answered {
-background-color: #98FB98;
+	background-color: #98FB98;
 }
+
 .unanswered {
-background-color: #FFA07A;
+	background-color: #FFA07A;
 }
 </style>
 
@@ -21,7 +22,7 @@ background-color: #FFA07A;
 	<h1>StackExchange Q&amp;A</h1>
 	<h:form>
 		<p:panel>
-			<p:messages autoUpdate="true" />
+			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
 
 			<p:panel id="toggleable" header="Task" toggleable="true"
 				toggleSpeed="500" widgetVar="panel" style="margin-bottom:20px">
@@ -64,13 +65,22 @@ background-color: #FFA07A;
 				</h:panelGrid>
 
 			</p:panel>
-			<h:panelGrid columns="3" style="margin-bottom:20px">
-				<h:outputText value="In title" />
+			<h:panelGrid columns="2" style="margin-bottom:20px">
+				<h:outputText value="In title *" />
 				<p:inputText value="#{quesView.intitle}" required="true"
 					requiredMessage="Please enter 'In title'" label="In title" />
+
+				<h:outputText value="Page" />
+				<p:inputText id="page" value="#{quesView.page}" label="Page" />
+
+				<h:outputText value="Page size" />
+				<p:inputText id="pagesize" value="#{quesView.pagesize}" label="Page size" />
+
 				<p:commandButton actionListener="#{quesView.buttonAction}"
-					update="stackItems" icon="ui-icon-search" />
+					value="Search" update="stackItems" icon="ui-icon-search" />
 			</h:panelGrid>
+			<p:inputText value="Has more answers"
+				rendered="quesView.lastAnswer.hasMore" />
 			<p:dataTable var="item" value="#{quesView.lastAnswer.items}"
 				rowStyleClass="#{item.isAnswered ? 'answered' : 'unanswered'}"
 				id="stackItems">

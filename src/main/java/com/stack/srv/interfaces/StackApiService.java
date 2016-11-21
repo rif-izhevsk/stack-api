@@ -5,9 +5,11 @@ import javax.ws.rs.core.Response;
 public interface StackApiService {
 	/** 
 	 * Test request with constant parameters
-	 * @param intitle substring in title
+	 * @param intitle The substring in title
+	 * @param page The page number
+	 * @param pagesize The page size
 	 * @return {@link Response}
 	 */
-	public Response search(String intitle);
+	public Response search(String intitle, Integer page, Integer pagesize);
 
 }

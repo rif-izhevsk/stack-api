@@ -20,7 +20,7 @@ public class StackApiServiceTest {
 
 	@Test
 	public void test() {
-		Response response = stackApiService.search("java");
+		Response response = stackApiService.search("java", null, null);
 		assertEquals(200, response.getStatus());
 	}
 
